@@ -1,0 +1,38 @@
+- hosts: all
+  become: true
+  tasks:
+
+    - name: Download template file
+      get_url:
+        url: http://192.168.56.10/dvd/hwreport.empty
+        dest: /root/hwreport.txt
+
+    - name: Update HOST
+      lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^HOST='
+        line: "HOST={{ inventory_hostname }}"
+
+    - name: Update MEMORY
+      lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^MEMORY='
+        line: "MEMORY={{ ansible_memtotal_mb }}"
+
+    - name: Update BIOS
+      lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^BIOS='
+        line: "BIOS={{ ansible_bios_version | default('NONE') }}"
+
+    - name: Update SDA
+      lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^SDA='
+        line: "SDA={{ ansible_devices.sda.size | default('NONE') }}"
+
+    - name: Update SDB
+      lineinfile:
+        path: /root/hwreport.txt
+        regexp: '^SDB='
+        line: "SDB={{ ansible_devices.sdb.size | default('NONE') }}"

@@ -1,0 +1,10 @@
+- hosts: all
+  become: true
+  tasks:
+      - name: run this job every 2 minutes
+        ansible.builtin.cron:
+             name: "check dirs"
+             minute: "*/2"
+             user: desktop
+             job: logger "EX294 in Progress"
+

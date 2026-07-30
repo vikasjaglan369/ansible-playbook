@@ -1,0 +1,27 @@
+- hosts: test
+  become: true
+  tasks:
+      - name: group add webdev
+        group:
+            name: webdev
+            state: present
+
+      - name: create directory
+        file:
+           path: /webdev
+           state: directory
+           group: webdev
+           mode: 02775
+
+      - name: create link
+        file:
+           src: /webdev
+           dest: /var/www/html/webdev
+           state: link
+
+      - name: create index.html in /webdev
+        copy:
+           content: "Development"
+           dest: /webdev/index.html
+
+      - command: chcon -R -t httpd_sys_content_t /webdev

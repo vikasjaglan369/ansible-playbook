@@ -1,0 +1,22 @@
+- hosts: all
+  become: true
+  tasks:
+  - name: Repo1
+    ansible.builtin.yum_repository:
+          name: EX294_BASE
+          description: EX294 Base Software
+          baseurl: http://192.168.56.10/dvd/BaseOS/
+          enabled: yes
+          gpgcheck: yes
+          gpgkey: http://192.168.56.10/dvd/RPM-GPG-KEY-redhat-release 
+
+  - name: Repo2
+    ansible.builtin.yum_repository:
+          name: EX294_STREAM
+          description: EX294 Stream Software
+          baseurl: http://192.168.56.10/dvd/AppStream/
+          enabled: yes
+          gpgcheck: yes
+          gpgkey: http://192.168.56.10/dvd/RPM-GPG-KEY-redhat-release
+
+

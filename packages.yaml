@@ -1,0 +1,22 @@
+- hosts: dev,test
+  become: true
+  tasks:
+  - name: Install Php and Mariadb
+    ansible.builtin.yum:
+          name: 
+            - php
+            - mariadb
+          state: latest 
+
+- hosts: dev
+  become: true
+  tasks: 
+  - name: Install the 'Development tools' package group
+    ansible.builtin.yum:
+          name: "@Development tools"
+          state: present
+
+  - name: Update all packages
+    ansible.builtin.yum:
+          name: '*'
+          state: latest 

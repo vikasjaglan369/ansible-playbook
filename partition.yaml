@@ -1,0 +1,81 @@
+- hosts: balancers
+  become: true
+  tasks:
+
+    - stat:
+        path: /dev/sdd
+      register: disk
+
+    - debug:
+        msg: "Disk does not exists"
+      when: not disk.stat.exists
+
+    - block:
+
+        - parted:
+            device: /dev/sdb
+            number: 1
+            state: present
+            part_start: 1MiB
+            part_end: 1501MiB
+
+      rescue:
+
+        - debug:
+            msg: "Could not create partition of that size"
+
+        - parted:
+            device: /dev/sdb
+            number: 1
+            state: present
+            part_start: 1MiB
+            part_end: 801MiB
+
+        - filesystem:
+            fstype: ext4
+            dev: /dev/sdb1
+
+        - file:
+            path: /newpart
+            state: directory
+
+        - mount:
+            path: /newpart
+            src: /dev/sdb1
+            fstype: ext4
+            state: mounted
+
+    - block:
+
+        - parted:
+            device: /dev/sdc
+            number: 1
+            state: present
+            part_start: 1MiB
+            part_end: 1501MiB
+
+      rescue:
+
+        - debug:
+            msg: "Could not create partition of that size"
+
+        - parted:
+            device: /dev/sdc
+            number: 1
+            state: present
+            part_start: 1MiB
+            part_end: 801MiB
+
+        - filesystem:
+            fstype: ext4
+            dev: /dev/sdc1
+
+        - file:
+            path: /newpart1
+            state: directory
+
+        - mount:
+            path: /newpart1
+            src: /dev/sdc1
+            fstype: ext4
+            state: mounted

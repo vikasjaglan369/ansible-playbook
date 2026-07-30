@@ -1,0 +1,45 @@
+- hosts: dev
+  become: true
+  vars_files:
+           - locker.yaml
+           - user_list.yaml
+  tasks:
+      - name: group add
+        group:
+            name: devops
+            state: present
+
+      - name: add user
+        user:
+           name: "{{ item.name }}"
+           uid: "{{ item.uid }}"
+           password: "{{ pw_developer | password_hash('sha512') }}"
+           groups: devops
+           append: yes
+           password_expire_max: "{{ item.password_expire_days }}"
+        when: item.job == 'developer'
+        with_items:
+                 - "{{ myusers }}"
+
+- hosts: test
+  become: true
+  vars_files:
+           - locker.yaml
+           - user_list.yaml
+  tasks:
+      - name: group add
+        group:
+            name: opsmgr
+            state: present
+
+      - name: add user
+        user:
+           name: "{{ item.name }}"
+           uid: "{{ item.uid }}"
+           password: "{{ pw_manager | password_hash('sha512') }}"
+           groups: opsmgr
+           append: yes
+           password_expire_max: "{{ item.password_expire_days }}"
+        when: item.job == 'manager'
+        with_items:
+                 - "{{ myusers }}"

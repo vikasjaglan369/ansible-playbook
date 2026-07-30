@@ -1,0 +1,15 @@
+[dev]
+node1
+
+[test]
+node2
+
+[prod]
+node1
+node2
+
+[balancers]
+node1
+
+[webservers]
+node2

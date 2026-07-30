@@ -10,18 +10,18 @@
          src: index.html.j2
          dest: /var/www/html/index.html
 
+- name: start firewalld
+  service:
+        name: firewalld
+        state: started
+        enabled: true         
+
 - name: enable http service
   firewalld:
           service: http
           state: enabled
           permanent: true
           immediate: true
-
-- name: start firewalld
-  service:
-        name: firewalld
-        state: started
-        enabled: true
 
 - name: start http
   service: 

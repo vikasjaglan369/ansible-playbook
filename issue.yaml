@@ -1,0 +1,14 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Set issue file for dev hosts
+      copy:
+        dest: /etc/issue
+        content: "Development\n"
+      when: inventory_hostname in groups['dev']
+
+    - name: Set issue file for test hosts
+      copy:
+        dest: /etc/issue
+        content: "Test\n"
+      when: inventory_hostname in groups['test']
